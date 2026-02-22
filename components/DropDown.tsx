@@ -1,41 +1,77 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { useThemeColors } from "@/hooks/useThemeColors";
+import React, { SetStateAction, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
-const DropDown = ({ data }: { data: string[] }) => {
-    const [value, setValue] = useState(data[0]);
+interface DropDownProps {
+    data: string[];
+    selected: string;
+    setSelected: React.Dispatch<SetStateAction<string>>;
+}
+
+const DropDownItem = ({
+    value,
+    setSelected,
+}: Omit<DropDownProps, "data" | "selected"> & {
+    value: string;
+}) => {
+    return (
+        <Text
+            key={Math.random() * 1000000}
+            style={styles.item}
+            onPress={() => setSelected(value)}
+        >
+            {value}
+        </Text>
+    );
+};
+
+const DropDown = ({ data, selected, setSelected }: DropDownProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const theme = useThemeColors();
 
     return (
         data.length > 0 && (
-            <View style={styles.picker}>
-                <Text style={[styles.picker, {backgroundColor: }]}>{value}</Text>
-                {isOpen &&
-                    data.map(
-                        (val, index) =>
-                            val !== value && (
-                                <Text
-                                    key={Math.random() * 1000000}
-                                    style={[
-                                        styles.picker,
-                                        {
-                                            position: "absolute",
-                                            top: styles.picker.height * index,
-                                        },
-                                    ]}
-                                >
-                                    {val}
-                                </Text>
-                            ),
-                    )}
+            <View style={styles.item}>
+                <Pressable
+                    style={({ pressed }) => [
+                        styles.item,
+                        {
+                            backgroundColor: pressed
+                                ? theme.button.pressed
+                                : theme.button.default,
+                        },
+                    ]}
+                    onPress={() => setIsOpen(!isOpen)}
+                >
+                    <Text>{selected}</Text>
+                </Pressable>
+                {isOpen && (
+                    <ScrollView>
+                        {data.map(
+                            (val, index) =>
+                                val !== selected && (
+                                    <DropDownItem
+                                        key={index}
+                                        value={selected}
+                                        setSelected={setSelected}
+                                    />
+                                ),
+                        )}
+                    </ScrollView>
+                )}
             </View>
         )
     );
 };
 
 const styles = StyleSheet.create({
-    picker: {
+    item: {
         width: 200,
         height: 54,
+        borderStartWidth: 4,
+        borderEndWidth: 4,
+        borderTopWidth: 2,
+        borderBottomWidth: 2,
     },
 });
 

@@ -1,0 +1,1 @@
+export type TimePeriod = "week" | "month" | "3 months" | "year";

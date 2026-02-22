@@ -1,12 +1,9 @@
+import { TimePeriod } from "@/constants/types";
 import { subDays, subMonths } from "date-fns";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-const CalendarHeatmap = ({
-    period,
-}: {
-    period: "week" | "month" | "3 months" | "year";
-}) => {
+const CalendarHeatmap = ({ period }: { period: TimePeriod }) => {
     const data = [
         {
             date: new Date("2026-01-26"),
@@ -54,7 +51,7 @@ const CalendarHeatmap = ({
         }
     };
 
-    const getContainerDims = () => {
+    const getBarDims = () => {
         switch (period) {
             case "week":
                 return [54, 1];
@@ -65,7 +62,7 @@ const CalendarHeatmap = ({
 
     let periodLookup = getPeriodLookup();
     let numberOfBars = getNumberOfBars();
-    let [barWidth, columnHeight] = getContainerDims();
+    let [barWidth, columnHeight] = getBarDims();
 
     return (
         <View style={styles.container}>
@@ -99,27 +96,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     heatBarBg: {
-        color: "hsl(120 60% 60%)",
-    },
-    heatBar: {
-        width: 18,
-        height: 18,
-    },
-    oneWeekHeatBap: {
-        width: 36,
-        height: 36,
-    },
-    noneCompleted: {
-        opacity: 0.2,
-    },
-    completed30Percent: {
-        opacity: 0.5,
-    },
-    mostlyCompleted: {
-        opacity: 0.8,
-    },
-    allTasksCompleted: {
-        opacity: 1.0,
+        color: "",
     },
 });
 

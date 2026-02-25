@@ -1,44 +1,32 @@
-import { timePeriods } from "@/constants/const";
-import { commonStyles } from "@/styles/commonStyles";
 import { subDays, subMonths } from "date-fns";
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Text, View } from "react-native";
+
+import { timePeriods } from "@/constants/const";
+
+import { useTodosStore } from "@/store/todosStore";
+import { commonStyles } from "@/styles/commonStyles";
+
 import DropDown from "./DropDown";
+import HeatBar from "./HeatBar";
 
 const CalendarHeatmap = () => {
     const [period, setPeriod] = useState<string>(timePeriods[0]);
-    const data = [
-        {
-            date: new Date("2026-01-26"),
-            tasksCompleted: 5,
-        },
-        {
-            date: new Date("2026-01-27"),
-            tasksCompleted: 5,
-        },
-        {
-            date: new Date("2026-01-28"),
-            tasksCompleted: 5,
-        },
-        {
-            date: new Date("2026-01-29"),
-            tasksCompleted: 5,
-        },
-    ];
-
-    data.sort((a, b) => a.date.getTime() - b.date.getTime());
+    const getTodos = useTodosStore((state) => state.getTodos);
+    const currDate = new Date();
 
     const getPeriodLookup = () => {
         switch (period) {
             case "week":
-                return subDays(new Date(), 6);
+                return subDays(currDate, 6);
             case "month":
-                return subDays(new Date(), 24);
+                return subDays(currDate, 24);
             case "3 months":
-                return subDays(subMonths(new Date(), 2), 15);
+                return subDays(subMonths(currDate, 2), 15);
             case "year":
-                return subMonths(new Date(), 11);
+                return subMonths(currDate, 11);
         }
+        return subDays(currDate, 6);
     };
 
     const getNumberOfBars = () => {
@@ -52,24 +40,30 @@ const CalendarHeatmap = () => {
             case "year":
                 return 365;
         }
+        return 7;
     };
 
     const getBarDims = () => {
         switch (period) {
             case "week":
-                return [54, 1];
+                return [36, 1];
             default:
-                return [16, 7];
+                return [14, 7];
         }
     };
 
     let periodLookup = getPeriodLookup();
     let numberOfBars = getNumberOfBars();
     let [barWidth, columnHeight] = getBarDims();
+    const todos = getTodos(periodLookup, currDate);
+    let layoutStyles =
+        period === "week"
+            ? [commonStyles.flexRow, commonStyles.gapSm]
+            : [commonStyles.flexCol, commonStyles.gapMd];
 
     return (
         <View style={commonStyles.flexCol}>
-            <View>
+            <View style={[commonStyles.flexRow, commonStyles.spaceBetween]}>
                 <Text>Select Period</Text>
                 <DropDown
                     data={timePeriods}
@@ -77,32 +71,13 @@ const CalendarHeatmap = () => {
                     setSelected={setPeriod}
                 />
             </View>
-            <View style={styles.heatBarContainer}>{}</View>
+            <View style={[commonStyles.flexWrap, ...layoutStyles]}>
+                {todos.map((todo) => (
+                    <HeatBar key={todo.id} />
+                ))}
+            </View>
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        display: "flex",
-        flexDirection: "column",
-    },
-    selectPanel: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
-    heatBarContainer: {
-        display: "flex",
-        flexDirection: "column",
-        flexWrap: "wrap",
-    },
-    oneWeekContainer: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-    },
-});
 
 export default CalendarHeatmap;

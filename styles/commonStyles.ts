@@ -46,11 +46,14 @@ export const commonStyles = StyleSheet.create({
     iconMd: {
         height: 36,
         width: "auto",
-    }
+    },
+    flexWrap: {
+        flexWrap: "wrap",
+    },
+    gapSm: {
+        gap: 5,
+    },
+    gapMd: {
+        gap: 15,
+    },
 });
-
-export const gap = (px: number) => {
-    return {
-        gap: px,
-    };
-};

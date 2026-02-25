@@ -1,18 +1,15 @@
-import { TimePeriod } from "@/constants/types";
+import { TimePeriod, Todo } from "@/constants/types";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
-// TODO: Finish creating HearBar component with it's parent!!
-const HeatBar = ({
-    period,
-    date,
-    count,
-}: {
+interface HeatBarProps {
     period: TimePeriod;
-    date: Date;
-    count: number;
-}) => {
-    return <View style={[]}></View>;
+    style: StyleProp<ViewStyle>;
+    todo: Todo;
+}
+
+const HeatBar = ({ period, style, todo }: HeatBarProps) => {
+    return <View style={style}></View>;
 };
 
 const styles = StyleSheet.create({

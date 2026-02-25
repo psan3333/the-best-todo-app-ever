@@ -1,4 +1,4 @@
-import { useWindowDimensions } from "react-native";
+import { StyleProp, TextStyle, useWindowDimensions, ViewStyle } from "react-native";
 
 type MediaQueryType = "minWidth" | "maxWidth" | "minHeight" | "maxHeight";
 type MediaQuery = {
@@ -6,7 +6,7 @@ type MediaQuery = {
     value: number;
 };
 
-export const useMediaQuery = (queries: MediaQuery[]) => {
+export const useMediaQuery = (queries: MediaQuery[], style: StyleProp<TextStyle | ViewStyle>) => {
     const { width, height } = useWindowDimensions();
 
     const checkIfQuerySatisfies = (key: MediaQueryType, value: number) => {
@@ -24,11 +24,11 @@ export const useMediaQuery = (queries: MediaQuery[]) => {
         }
     }
 
-    let result: boolean = true;
+    let querySatisfied: boolean = true;
     for (let { query, value } of queries) {
         // key is guarantied to have QueryType from hook parameter type
-        result &&= checkIfQuerySatisfies(query, value);
+        querySatisfied &&= checkIfQuerySatisfies(query, value);
     }
 
-    return result;
+    return querySatisfied ? style : {};
 }

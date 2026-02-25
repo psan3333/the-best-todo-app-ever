@@ -1,4 +1,5 @@
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { commonStyles } from "@/styles/commonStyles";
 import React, { SetStateAction, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -10,15 +11,16 @@ interface DropDownProps {
 
 const DropDownItem = ({
     value,
-    setSelected,
-}: Omit<DropDownProps, "data" | "selected"> & {
+    onPress,
+}: {
     value: string;
+    onPress: () => void;
 }) => {
     return (
         <Text
             key={`${Math.random() * 1000000}`}
             style={styles.item}
-            onPress={() => setSelected(value)}
+            onPress={() => onPress()}
         >
             {value}
         </Text>
@@ -31,10 +33,9 @@ const DropDown = ({ data, selected, setSelected }: DropDownProps) => {
 
     return (
         data.length > 0 && (
-            <View style={styles.item}>
+            <View>
                 <Pressable
                     style={({ pressed }) => [
-                        styles.item,
                         {
                             backgroundColor: pressed
                                 ? theme.button.pressed
@@ -43,17 +44,28 @@ const DropDown = ({ data, selected, setSelected }: DropDownProps) => {
                     ]}
                     onPress={() => setIsOpen(!isOpen)}
                 >
-                    <Text>{selected}</Text>
+                    <Text style={[styles.item, styles.pressableStyles]}>
+                        {selected}
+                    </Text>
                 </Pressable>
                 {isOpen && (
-                    <ScrollView>
+                    <ScrollView
+                        style={[
+                            commonStyles.absolute,
+                            commonStyles.elementBelow,
+                            styles.scrollStyles,
+                        ]}
+                    >
                         {data.map(
                             (val, index) =>
                                 val !== selected && (
                                     <DropDownItem
                                         key={index}
-                                        value={selected}
-                                        setSelected={setSelected}
+                                        value={val}
+                                        onPress={() => {
+                                            setSelected(val);
+                                            setIsOpen(false);
+                                        }}
                                     />
                                 ),
                         )}
@@ -66,12 +78,18 @@ const DropDown = ({ data, selected, setSelected }: DropDownProps) => {
 
 const styles = StyleSheet.create({
     item: {
-        width: 200,
-        height: 54,
-        borderStartWidth: 4,
-        borderEndWidth: 4,
-        borderTopWidth: 2,
-        borderBottomWidth: 2,
+        width: 150,
+        height: 48,
+        fontSize: 24,
+    },
+    pressableStyles: {
+        borderWidth: 2,
+        borderColor: "black",
+    },
+    scrollStyles: {
+        height: 150,
+        borderWidth: 2,
+        borderColor: "black",
     },
 });
 

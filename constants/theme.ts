@@ -18,9 +18,9 @@ export const Colors = {
             disabled: "hsla(0, 0%, 8%, 0.3)"
         },
         button: {
-            default: "hsl(156, 91%, 40%)",
-            pressed: "hsl(156, 91%, 55%)",
-            disabled: "hsla(0, 0%, 75%, 0.7)",
+            default: "hsl(156, 0%, 90%)",
+            pressed: "hsl(156, 0%, 80%)",
+            disabled: "hsla(156, 0%, 75%, 0.7)",
         },
         shadow: "hsla(0, 0%, 0%, 0.5)",
         error: "hsl(0, 63%, 64%)",

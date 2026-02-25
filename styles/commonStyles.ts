@@ -63,4 +63,10 @@ export const commonStyles = StyleSheet.create({
     gapMd: {
         gap: 15,
     },
+    absolute: {
+        position: "absolute",
+    },
+    elementBelow: {
+        top: "100%",
+    }
 });

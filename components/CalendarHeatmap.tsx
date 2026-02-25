@@ -18,7 +18,7 @@ import TodoHeatbar from "./TodoHeatbar";
 const CalendarHeatmap = () => {
     const [period, setPeriod] = useState<TimePeriod>(timePeriods[0]);
     const getTodos = useTodosStore((state) => state.getTodos);
-    const shadowStyles = useBoxShadow(10);
+    const shadowStyles = useBoxShadow(9);
     const colors = useThemeColors();
     const currDate = new Date();
 
@@ -84,6 +84,7 @@ const CalendarHeatmap = () => {
         <View
             style={[
                 commonStyles.flexCol,
+                commonStyles.wFull,
                 shadowStyles.cardShadow,
                 {
                     backgroundColor: colors.surface[1],

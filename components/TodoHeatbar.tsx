@@ -2,18 +2,21 @@ import { Todo } from "@/constants/types";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useTodosStore } from "@/store/todosStore";
 import { layoutStyles } from "@/styles/layout";
-import React from "react";
-import { StyleProp, ViewStyle } from "react-native";
-import { Shadow } from "react-native-shadow-2";
+import { useRouter } from "expo-router";
+import React, { useMemo } from "react";
+import { Pressable, StyleProp, ViewStyle } from "react-native";
 
 interface HeatBarProps {
     style: StyleProp<ViewStyle>;
     todos: Todo[];
+    dateInDayFormat: string;
 }
 
-const TodoHeatbar = ({ style, todos }: HeatBarProps) => {
+const TodoHeatbar = ({ style, todos, dateInDayFormat }: HeatBarProps) => {
     const userDailyTarget = useTodosStore((state) => state.userDailyTarget);
     const colors = useThemeColors();
+    const router = useRouter();
+
     const barOpacity = () => {
         const minOpacity = 0.2;
         const maxOpacity = 1.0;
@@ -25,13 +28,33 @@ const TodoHeatbar = ({ style, todos }: HeatBarProps) => {
             ),
         };
     };
+
+    const heatBarStyles = useMemo(
+        () => ({
+            outlineWidth: 2,
+            outlineOffset: 1,
+            outlineColor: colors.shadow,
+            backgroundColor: colors.primary,
+        }),
+        [colors.primary, colors.shadow],
+    );
+
     return (
-        <Shadow
-            distance={2}
-            offset={[0, 3]}
-            style={[layoutStyles.borderMd, style, barOpacity()]}
-            startColor={colors.shadow}
-        ></Shadow>
+        <Pressable
+            onPress={() => {
+                console.log("pressed", dateInDayFormat);
+                router.navigate({
+                    pathname: "/todos/period",
+                });
+            }}
+            style={(state) => [
+                state.pressed && { opacity: 0.8 },
+                layoutStyles.borderMd,
+                style,
+                heatBarStyles,
+                barOpacity(),
+            ]}
+        ></Pressable>
     );
 };
 

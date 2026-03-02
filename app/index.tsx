@@ -11,8 +11,8 @@ export default function Index() {
                 layoutStyles.flexCol,
                 layoutStyles.alignCenter,
                 layoutStyles.appContainer,
+                layoutStyles.pdSm,
                 styles.spaceBetweenItems,
-                { backgroundColor: colors.surface[1] },
             ]}
         >
             <CalendarHeatmap />

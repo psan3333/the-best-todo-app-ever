@@ -19,7 +19,6 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { useBoxShadow } from "@/hooks/useBoxShadow";
-import { Shadow } from "react-native-shadow-2";
 import Paragraph from "./typography/Paragraph";
 interface DropDownProps {
     data: string[];
@@ -68,7 +67,7 @@ const DropDownList = ({
     dropdownItemStyle,
 }: DropDownListProps) => {
     return (
-        <ScrollView style={dropdownListStyle}>
+        <ScrollView style={[layoutStyles.aboveAll, dropdownListStyle]}>
             {data.map((val, index) => {
                 const includeTopBorder = index > 0;
                 return (
@@ -117,7 +116,6 @@ const DropDown = ({ data, selected, setSelected }: DropDownProps) => {
                 dropdownListStyle={[
                     layoutStyles.absolute,
                     layoutStyles.elementBelow,
-                    layoutStyles.zMax,
                     styles.scrollStyles,
                     styles.dropdownBorder,
                     shadowStyles.cardShadow,
@@ -137,28 +135,27 @@ const DropDown = ({ data, selected, setSelected }: DropDownProps) => {
     return (
         data.length > 0 && (
             <View>
-                <Shadow distance={4} offset={[2, 2]}>
-                    <DropDownItem
-                        onPress={() => setIsOpen(!isOpen)}
-                        style={[
-                            layoutStyles.flexRow,
-                            layoutStyles.alignCenter,
-                            layoutStyles.spaceBetween,
-                            layoutStyles.pdSm,
-                            styles.item,
-                            styles.selectBorder,
-                        ]}
-                    >
-                        <Paragraph>{selected}</Paragraph>
-                        <Animated.View style={arrowStyles}>
-                            <Feather
-                                name="arrow-right"
-                                size={24}
-                                color={colors.text.primary}
-                            />
-                        </Animated.View>
-                    </DropDownItem>
-                </Shadow>
+                <DropDownItem
+                    onPress={() => setIsOpen(!isOpen)}
+                    style={[
+                        layoutStyles.flexRow,
+                        layoutStyles.alignCenter,
+                        layoutStyles.spaceBetween,
+                        layoutStyles.pdSm,
+                        styles.item,
+                        styles.selectBorder,
+                        shadowStyles.cardShadow,
+                    ]}
+                >
+                    <Paragraph>{selected}</Paragraph>
+                    <Animated.View style={arrowStyles}>
+                        <Feather
+                            name="arrow-right"
+                            size={24}
+                            color={colors.text.primary}
+                        />
+                    </Animated.View>
+                </DropDownItem>
                 {isOpen && options}
             </View>
         )

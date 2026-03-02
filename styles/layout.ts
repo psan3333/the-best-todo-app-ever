@@ -96,7 +96,13 @@ export const layoutStyles = StyleSheet.create({
     elementBelow: {
         top: "100%",
     },
-    zMax: {
+    elementAtBottom: {
+        bottom: 0,
+    },
+    aboveAll: {
         zIndex: 1000,
+    },
+    zSurface: {
+        zIndex: 1,
     }
 });

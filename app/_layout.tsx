@@ -2,9 +2,8 @@ import { Icon } from "@expo/vector-icons/build/createIconSet";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-import { Href, Link, usePathname } from "expo-router";
-import { TabList, Tabs, TabSlot, TabTrigger } from "expo-router/ui";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Href, Link, Slot, usePathname } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Navbar from "@/components/Navbar";
@@ -18,14 +17,12 @@ type extractIconType<Type> = Type extends Icon<infer X, infer Y> ? X : never;
 const tabRoutes = [
     {
         route: "/",
-        name: "index",
         text: "Home",
         iconName: "home",
         Icon: Feather,
     },
     {
         route: "/todos",
-        name: "todos/index",
         text: "Your TODO",
         iconName: "check-square",
         Icon: Feather,
@@ -81,38 +78,31 @@ export default function RootLayout() {
         <SafeAreaView
             style={[
                 layoutStyles.flexCol,
-                layoutStyles.justifyCenter,
                 layoutStyles.hFull,
+                layoutStyles.spaceBetween,
                 { backgroundColor: colors.surface[0] },
             ]}
         >
-            <Tabs>
-                <Navbar />
-                <TabSlot />
-                <TabList
-                    style={[
-                        layoutStyles.flexRow,
-                        layoutStyles.spaceAround,
-                        layoutStyles.alignCenter,
-                    ]}
-                >
-                    {tabRoutes.map(({ route, name, text, iconName, Icon }) => (
-                        <TabTrigger
-                            key={`${Math.random() * 100000000}`}
-                            name={name}
-                            href={route as Href}
-                        >
-                            <TabBarButton
-                                text={text}
-                                route={route}
-                                iconName={iconName as extractIconType<IconType>}
-                                currPath={currPath}
-                                Icon={Icon as IconType}
-                            />
-                        </TabTrigger>
-                    ))}
-                </TabList>
-            </Tabs>
+            <Navbar />
+            <Slot />
+            <View
+                style={[
+                    layoutStyles.flexRow,
+                    layoutStyles.spaceAround,
+                    layoutStyles.alignCenter,
+                ]}
+            >
+                {tabRoutes.map(({ route, text, iconName, Icon }) => (
+                    <TabBarButton
+                        key={`${Math.random() * 100000000}`}
+                        text={text}
+                        route={route}
+                        iconName={iconName as extractIconType<IconType>}
+                        currPath={currPath}
+                        Icon={Icon as IconType}
+                    />
+                ))}
+            </View>
         </SafeAreaView>
     );
 }

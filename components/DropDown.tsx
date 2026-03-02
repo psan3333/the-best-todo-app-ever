@@ -2,7 +2,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { layoutStyles } from "@/styles/layout";
 
 import Feather from "@expo/vector-icons/Feather";
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, useMemo, useState } from "react";
 import {
     Pressable,
     ScrollView,
@@ -19,6 +19,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { useBoxShadow } from "@/hooks/useBoxShadow";
+import { Shadow } from "react-native-shadow-2";
 import Paragraph from "./typography/Paragraph";
 interface DropDownProps {
     data: string[];
@@ -105,54 +106,60 @@ const DropDown = ({ data, selected, setSelected }: DropDownProps) => {
         ],
     }));
 
+    const options = useMemo(
+        () => (
+            <DropDownList
+                data={data.filter((val) => val !== selected)}
+                onPress={(val: string) => {
+                    setSelected(val);
+                    setIsOpen(false);
+                }}
+                dropdownListStyle={[
+                    layoutStyles.absolute,
+                    layoutStyles.elementBelow,
+                    layoutStyles.zMax,
+                    styles.scrollStyles,
+                    styles.dropdownBorder,
+                    shadowStyles.cardShadow,
+                ]}
+                dropdownItemStyle={[
+                    layoutStyles.flexRow,
+                    layoutStyles.alignCenter,
+                    layoutStyles.spaceBetween,
+                    layoutStyles.pdSm,
+                    styles.item,
+                ]}
+            />
+        ),
+        [data, selected, setSelected, shadowStyles.cardShadow],
+    );
+
     return (
         data.length > 0 && (
             <View>
-                <DropDownItem
-                    onPress={() => setIsOpen(!isOpen)}
-                    style={[
-                        layoutStyles.flexRow,
-                        layoutStyles.alignCenter,
-                        layoutStyles.spaceBetween,
-                        layoutStyles.pdSm,
-                        styles.item,
-                        styles.selectBorder,
-                        shadowStyles.cardShadow,
-                    ]}
-                >
-                    <Paragraph>{selected}</Paragraph>
-                    <Animated.View style={arrowStyles}>
-                        <Feather
-                            name="arrow-right"
-                            size={24}
-                            color={colors.text.primary}
-                        />
-                    </Animated.View>
-                </DropDownItem>
-                {isOpen && (
-                    <DropDownList
-                        data={data.filter((val) => val !== selected)}
-                        onPress={(val: string) => {
-                            setSelected(val);
-                            setIsOpen(false);
-                        }}
-                        dropdownListStyle={[
-                            layoutStyles.absolute,
-                            layoutStyles.elementBelow,
-                            layoutStyles.zMax,
-                            styles.scrollStyles,
-                            styles.dropdownBorder,
-                            shadowStyles.cardShadow,
-                        ]}
-                        dropdownItemStyle={[
+                <Shadow distance={4} offset={[2, 2]}>
+                    <DropDownItem
+                        onPress={() => setIsOpen(!isOpen)}
+                        style={[
                             layoutStyles.flexRow,
                             layoutStyles.alignCenter,
                             layoutStyles.spaceBetween,
                             layoutStyles.pdSm,
                             styles.item,
+                            styles.selectBorder,
                         ]}
-                    />
-                )}
+                    >
+                        <Paragraph>{selected}</Paragraph>
+                        <Animated.View style={arrowStyles}>
+                            <Feather
+                                name="arrow-right"
+                                size={24}
+                                color={colors.text.primary}
+                            />
+                        </Animated.View>
+                    </DropDownItem>
+                </Shadow>
+                {isOpen && options}
             </View>
         )
     );

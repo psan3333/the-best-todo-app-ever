@@ -100,7 +100,7 @@ const CalendarHeatmap = () => {
 
     return (
         <View style={layoutStyles.wFull}>
-            <Shadow distance={4} offset={[0, 2]} stretch={true}>
+            <Shadow distance={2} offset={[0, 2]} stretch={true}>
                 <View
                     style={[
                         layoutStyles.flexCol,

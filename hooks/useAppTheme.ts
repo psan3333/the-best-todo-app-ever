@@ -1,7 +1,9 @@
 import { useThemeStore } from "@/store/themeStore";
-import * as SecureStore from 'expo-secure-store';
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
+
+import * as NavigationBar from 'expo-navigation-bar';
+import * as SecureStore from 'expo-secure-store';
 
 type AppTheme = "light" | "dark";
 
@@ -20,5 +22,6 @@ export const useAppTheme = () => {
 
     useEffect(() => {
         SecureStore.setItemAsync("theme", theme);
+        NavigationBar.setStyle(theme);
     }, [theme]);
 }

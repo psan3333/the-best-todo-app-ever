@@ -13,7 +13,7 @@ export const useBoxShadow = () => {
                     offsetX: 0,
                     offsetY: 4,
                     blurRadius: 4,
-                    color: colors.shadow
+                    color: colors.outline
                 }
             ]
         };

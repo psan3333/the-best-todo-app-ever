@@ -1,5 +1,5 @@
 import { subDays, subMonths } from "date-fns";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { timePeriods } from "@/constants/const";
@@ -19,7 +19,43 @@ const CalendarHeatmap = () => {
     const [period, setPeriod] = useState<TimePeriod>(timePeriods[0]);
     const getTodos = useTodosStore((state) => state.getTodosByPeriod);
     const colors = useThemeColors();
+    const containerRef = useRef<View>(null);
     const currDate = useMemo(() => new TZDate(), []);
+    const [gapBetweenBars, setGapBetweenBars] = useState(layoutStyles.gapSm);
+
+    const containerStyles = useMemo(
+        () => [
+            layoutStyles.wHalfLayoutContainer,
+            layoutStyles.borderMd,
+            layoutStyles.flexCol,
+            layoutStyles.alignCenter,
+            layoutStyles.borderMd,
+            layoutStyles.pdMd,
+            layoutStyles.gapMd,
+            {
+                backgroundColor: colors.surface[1],
+                outlineWidth: 2,
+                outlineColor: colors.outline,
+                outlineOffset: 1,
+            },
+        ],
+        [colors.outline, colors.surface],
+    );
+
+    const heatbarWidth = useMemo(() => {
+        let style = styles.heatbarLg;
+        if (period !== "week" && period !== "month") style = styles.heatbarSm;
+        return style;
+    }, [period]);
+
+    useEffect(() => {
+        setGapBetweenBars({
+            gap: Math.floor(
+                (containerRef.current!.clientWidth - heatbarWidth.width * 7) /
+                    6,
+            ),
+        });
+    }, [heatbarWidth]);
 
     const getPeriodLookup = useCallback(() => {
         switch (period) {
@@ -37,29 +73,15 @@ const CalendarHeatmap = () => {
     const periodLookup = getPeriodLookup();
     const todos = getTodos("finished", periodLookup, currDate);
 
-    const containerStyles = useMemo(
-        () => [
-            layoutStyles.wFull,
-            layoutStyles.borderMd,
-            layoutStyles.flexCol,
-            layoutStyles.borderMd,
-            layoutStyles.pdMd,
-            layoutStyles.gapMd,
-            {
-                backgroundColor: colors.surface[1],
-                outlineWidth: 3,
-                outlineColor: colors.shadow,
-                outlineOffset: 1,
-            },
-        ],
-        [colors.shadow, colors.surface],
-    );
     return (
         <View style={containerStyles}>
             <View
+                ref={containerRef}
                 style={[
+                    layoutStyles.wFull,
                     layoutStyles.flexRow,
                     layoutStyles.spaceBetween,
+                    layoutStyles.gapMd,
                     layoutStyles.alignCenter,
                 ]}
             >
@@ -72,24 +94,16 @@ const CalendarHeatmap = () => {
             </View>
             <View
                 style={[
-                    period === "week"
-                        ? [layoutStyles.gapMd, layoutStyles.flexRow]
-                        : [layoutStyles.gapSm, layoutStyles.flexCol],
-                    layoutStyles.flexWrap,
-                    {
-                        width:
-                            period === "week"
-                                ? styles.heatbarLg.width * 7 +
-                                  layoutStyles.gapMd.gap * 6 +
-                                  4
-                                : "auto",
+                    period === "week" || period === "month"
+                        ? layoutStyles.flexRow
+                        : layoutStyles.flexCol,
+                    !(period === "week" || period === "month") && {
                         height:
-                            period !== "week"
-                                ? styles.heatbarSm.width * 7 +
-                                  layoutStyles.gapSm.gap * 6 +
-                                  4
-                                : "auto",
+                            layoutStyles.gapXs.gap * 6 + heatbarWidth.width * 7,
                     },
+                    layoutStyles.flexWrap,
+                    layoutStyles.contentBox,
+                    gapBetweenBars,
                 ]}
             >
                 {todos.map((item) => {
@@ -97,11 +111,7 @@ const CalendarHeatmap = () => {
                     return (
                         <TodoHeatbar
                             key={day}
-                            style={
-                                period === "week"
-                                    ? styles.heatbarLg
-                                    : styles.heatbarSm
-                            }
+                            style={heatbarWidth}
                             todos={item[day]}
                             dateInDayFormat={day}
                         />
@@ -116,6 +126,10 @@ const styles = StyleSheet.create({
     heatbarLg: {
         height: 36,
         width: 36,
+    },
+    heatbarMd: {
+        height: 24,
+        width: 24,
     },
     heatbarSm: {
         height: 16,

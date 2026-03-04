@@ -21,6 +21,8 @@ type TodosStore = {
     getJSONStore: () => string;
 };
 
+const DAY_ID_FORMAT = 'yy-MM-dd';
+
 export const useTodosStore = create<TodosStore>((set, get) => ({
     userDailyTarget: 4,
     plannedTodosStore: {},
@@ -41,7 +43,7 @@ export const useTodosStore = create<TodosStore>((set, get) => ({
         return [plannedCnt, finishedCnt];
     },
     addTodo: (todo) => set((state) => {
-        const todoTimestamp = format(new TZDate(), 'MM-dd-yy');
+        const todoTimestamp = format(new TZDate(), DAY_ID_FORMAT);
         return {
             plannedTodosStore: {
                 ...state.plannedTodosStore,
@@ -54,7 +56,7 @@ export const useTodosStore = create<TodosStore>((set, get) => ({
         };
     }),
     deleteTodo: (todo) => set((state) => {
-        const todoTimestamp = format(new TZDate(todo.timestamp), 'MM-dd-yy');
+        const todoTimestamp = format(new TZDate(todo.timestamp), DAY_ID_FORMAT);
         return {
             plannedTodosStore: {
                 ...state.plannedTodosStore,
@@ -63,7 +65,7 @@ export const useTodosStore = create<TodosStore>((set, get) => ({
         };
     }),
     setTodoToFinished: (todo) => set((state) => {
-        const todoTimestamp = format(new TZDate(todo.timestamp), 'MM-dd-yy');
+        const todoTimestamp = format(new TZDate(todo.timestamp), DAY_ID_FORMAT);
         state.deleteTodo(todo);
         return {
             finishedTodosStore: {
@@ -86,7 +88,7 @@ export const useTodosStore = create<TodosStore>((set, get) => ({
         from = subDays(from, from.getDay());
         to = addDays(to, 6 - to.getDay());
         for (let timestamp = from; compareAsc(timestamp, to) <= 0; timestamp = addDays(timestamp, 1)) {
-            const dayToCheck = format(timestamp, 'MM-dd-yy');
+            const dayToCheck = format(timestamp, DAY_ID_FORMAT);
             if (!(dayToCheck in todos)) {
                 todosByDay.push({
                     [dayToCheck]: [],
@@ -106,10 +108,10 @@ export const useTodosStore = create<TodosStore>((set, get) => ({
             todos = finishedTodosStore;
         }
 
-        let parsedDate = parse(day, 'MM-dd-yy', new TZDate());
+        let parsedDate = parse(day, DAY_ID_FORMAT, new TZDate());
 
         if (!isValid(parsedDate))
-            throw new Error("todosStore: getTodosByDay - day mush be in 'MM-dd-yy' format.")
+            throw new Error(`todosStore: getTodosByDay - day mush be in '${DAY_ID_FORMAT}' format.`)
 
         return todos[day];
     },

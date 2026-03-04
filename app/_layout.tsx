@@ -3,12 +3,13 @@ import { Icon } from "@expo/vector-icons/build/createIconSet";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Href, Link, Slot, usePathname } from "expo-router";
-import { Pressable, View } from "react-native";
+import { Pressable, StatusBar, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Paragraph from "@/components/typography/Paragraph";
 import { useAppTheme } from "@/hooks/useAppTheme";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { useThemeStore } from "@/store/themeStore";
 import { layoutStyles } from "@/styles/layout";
 
 type IconType = typeof Feather & typeof MaterialIcons;
@@ -72,6 +73,7 @@ function TabBarButton({
 export default function RootLayout() {
     const currPath = usePathname();
     const colors = useThemeColors();
+    const theme = useThemeStore((state) => state.theme);
     useAppTheme();
     return (
         <SafeAreaView
@@ -82,6 +84,11 @@ export default function RootLayout() {
                 { backgroundColor: colors.surface[0] },
             ]}
         >
+            <StatusBar
+                animated={true}
+                barStyle={`${theme === "dark" ? "light" : "dark"}-content`}
+                backgroundColor={colors.surface[0]}
+            />
             <Navbar />
             <Slot />
             <View

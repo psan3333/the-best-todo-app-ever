@@ -76,7 +76,7 @@ const DropDownList = ({
                         onPress={() => onPress(val)}
                         style={[
                             dropdownItemStyle,
-                            includeTopBorder && styles.dropItemBorder,
+                            includeTopBorder && styles.dropdownItemDelimiter,
                         ]}
                     >
                         <Paragraph style={typography.textSm}>{val}</Paragraph>
@@ -116,7 +116,8 @@ const DropDown = ({ data, selected, setSelected }: DropDownProps) => {
                     layoutStyles.absolute,
                     layoutStyles.elementBelow,
                     styles.scrollStyles,
-                    styles.dropdownBorder,
+                    styles.dropdownListBorder,
+                    { borderColor: colors.border },
                 ]}
                 dropdownItemStyle={[
                     layoutStyles.flexRow,
@@ -124,10 +125,11 @@ const DropDown = ({ data, selected, setSelected }: DropDownProps) => {
                     layoutStyles.spaceBetween,
                     layoutStyles.pdSm,
                     styles.item,
+                    { borderColor: colors.border },
                 ]}
             />
         ),
-        [data, selected, setSelected],
+        [colors.border, data, selected, setSelected],
     );
 
     return (
@@ -141,7 +143,8 @@ const DropDown = ({ data, selected, setSelected }: DropDownProps) => {
                         layoutStyles.spaceBetween,
                         layoutStyles.pdSm,
                         styles.item,
-                        styles.selectBorder,
+                        styles.selectBox,
+                        { borderColor: colors.border },
                     ]}
                 >
                     <Paragraph style={typography.textSm}>{selected}</Paragraph>
@@ -164,15 +167,15 @@ const styles = StyleSheet.create({
         width: 150,
         height: 48,
     },
-    selectBorder: {
+    selectBox: {
         borderWidth: 2,
     },
-    dropdownBorder: {
+    dropdownListBorder: {
         borderLeftWidth: 2,
         borderRightWidth: 2,
         borderBottomWidth: 2,
     },
-    dropItemBorder: {
+    dropdownItemDelimiter: {
         borderTopWidth: 2,
     },
     scrollStyles: {

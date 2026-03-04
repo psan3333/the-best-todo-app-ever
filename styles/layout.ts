@@ -48,6 +48,12 @@ export const layoutStyles = StyleSheet.create({
     wFull: {
         width: "100%",
     },
+    wHalfLayoutContainer: {
+        width: "48%",
+    },
+    wAuto: {
+        width: "auto",
+    },
     flexWrap: {
         flexWrap: "wrap",
     },
@@ -107,5 +113,11 @@ export const layoutStyles = StyleSheet.create({
     },
     zSurface: {
         zIndex: 1,
+    },
+    borderBox: {
+        boxSizing: "border-box",
+    },
+    contentBox: {
+        boxSizing: "content-box",
     }
 });

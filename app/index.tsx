@@ -20,8 +20,10 @@ export default function Index() {
             <GridRow style={{ maxHeight: "50%" }}>
                 <TodoListContainer />
             </GridRow>
-            <CalendarHeatmap />
-            <GraphicalStats />
+            <GridRow style={{ flex: 1 }}>
+                <CalendarHeatmap />
+                <GraphicalStats />
+            </GridRow>
         </ScrollView>
     );
 }

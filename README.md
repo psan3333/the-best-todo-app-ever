@@ -1,4 +1,4 @@
-# Welcome to THE-BEST-TODO-APP-EVER!! 👋
+# Welcome to Schedule!! 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app). Also don't forget that it's a TODO APP - be disciplined and execute on your **Promises**!
 

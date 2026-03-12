@@ -1,15 +1,25 @@
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { ImageStyle } from "expo-image";
 import React, { ReactNode } from "react";
-import { GestureResponderEvent, Pressable, StyleProp } from "react-native";
+import {
+    GestureResponderEvent,
+    Pressable,
+    PressableProps,
+    StyleProp,
+    ViewStyle,
+} from "react-native";
 
 interface ButtonProps {
     onPress: (event: GestureResponderEvent) => void;
-    style: StyleProp<ImageStyle>;
+    style: StyleProp<ViewStyle>;
     children: ReactNode;
 }
 
-const Button = ({ onPress, style, children }: ButtonProps) => {
+const Button = ({
+    onPress,
+    style,
+    children,
+    ...props
+}: PressableProps & ButtonProps) => {
     const themeColors = useThemeColors();
 
     return (
@@ -23,6 +33,7 @@ const Button = ({ onPress, style, children }: ButtonProps) => {
                 },
             ]}
             onPress={onPress}
+            {...props}
         >
             {children}
         </Pressable>

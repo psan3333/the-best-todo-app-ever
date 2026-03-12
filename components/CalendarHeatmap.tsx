@@ -5,9 +5,12 @@ import { TimePeriod } from "@/constants/types";
 import { layoutStyles } from "@/styles/layout";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { useAppCache } from "@/store/cache";
 
 import { typography } from "@/styles/typography";
+import { getHeatMapBars, getPeriodLookup } from "@/utils/utils";
+import { TZDate } from "@date-fns/tz";
+
+import { useDB } from "@/hooks/useDB";
 import DropDown from "./pressable/DropDown";
 import TodoHeatbar from "./TodoHeatbar";
 import Heading from "./typography/Heading";
@@ -16,7 +19,7 @@ const CalendarHeatmap = () => {
     const [period, setPeriod] = useState<TimePeriod>("week");
     const [gapBetweenBars, setGapBetweenBars] = useState(layoutStyles.gapSm);
 
-    const getTodosByPeriod = useAppCache((state) => state.getTodosByPeriod);
+    const db = useDB();
     const heatmapViewRef = useRef<View>(null);
     const themeColors = useThemeColors();
 
@@ -54,7 +57,26 @@ const CalendarHeatmap = () => {
         });
     }, [heatbarWidth]);
 
-    const todos = getTodosByPeriod("finished", period);
+    const bars = useMemo(() => {
+        const todos = db.getTodosByPeriodAndType(period, "finished");
+        const lookupDate = getPeriodLookup(new TZDate(), period);
+        const barsData = getHeatMapBars(lookupDate, todos);
+        return (
+            <>
+                {barsData.map((item) => {
+                    const day = Object.keys(item)[0];
+                    return (
+                        <TodoHeatbar
+                            key={day}
+                            style={heatbarWidth}
+                            todos={item[day]}
+                            dateInDayFormat={day}
+                        />
+                    );
+                })}
+            </>
+        );
+    }, [db, heatbarWidth, period]);
 
     return (
         <View style={containerStyles}>
@@ -89,17 +111,7 @@ const CalendarHeatmap = () => {
                     gapBetweenBars,
                 ]}
             >
-                {todos.map((item) => {
-                    const day = Object.keys(item)[0];
-                    return (
-                        <TodoHeatbar
-                            key={day}
-                            style={heatbarWidth}
-                            todos={item[day]}
-                            dateInDayFormat={day}
-                        />
-                    );
-                })}
+                {bars}
             </View>
         </View>
     );

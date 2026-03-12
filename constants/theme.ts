@@ -1,4 +1,3 @@
-
 // Intuition behind naming:
 // background: color for main screen background
 // surface: for UI layers on top of background
@@ -15,7 +14,7 @@ export const Colors = {
         text: {
             primary: "hsla(120, 91%, 18%, 0.90)",
             secondary: "hsla(120, 100%, 8%, 0.5)",
-            disabled: "hsla(0, 0%, 8%, 0.3)"
+            disabled: "hsla(0, 0%, 8%, 0.3)",
         },
         button: {
             default: "hsl(156, 0%, 85%)",
@@ -52,4 +51,4 @@ export const Colors = {
         success: "hsl(156, 91%, 37%)",
         warning: "hsl(49, 55%, 54%)",
     },
-}
+};

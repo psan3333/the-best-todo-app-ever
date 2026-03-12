@@ -1,3 +1,3 @@
 import { TimePeriod } from "./types";
 
-export const timePeriods: TimePeriod[] = ["day", "week", "month", "year"];
+export const timePeriods: TimePeriod[] = ["today", "week", "month", "year"];

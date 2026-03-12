@@ -10,10 +10,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useAppSetup } from "@/hooks/useAppSetup";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { DBProvider } from "@/providers/DBProvider";
 import { useThemeStore } from "@/store/themeStore";
 import { layoutStyles } from "@/styles/layout";
 import { typography } from "@/styles/typography";
-import { SQLiteProvider } from "expo-sqlite";
 
 type IconType = typeof Feather & typeof MaterialIcons;
 type extractIconTypes<Type> = Type extends Icon<infer X, infer Y> ? X : never;
@@ -99,7 +99,7 @@ export default function RootLayout() {
                 </View>
             }
         >
-            <SQLiteProvider databaseName={process.env.DB_NAME!} useSuspense>
+            <DBProvider>
                 <SafeAreaView
                     style={[
                         layoutStyles.flexCol,
@@ -136,7 +136,7 @@ export default function RootLayout() {
                         ))}
                     </View>
                 </SafeAreaView>
-            </SQLiteProvider>
+            </DBProvider>
         </Suspense>
     );
 }

@@ -1,12 +1,16 @@
-
 export type TodoType = "planned" | "finished";
-export type TimePeriod = "day" | "week" | "month" | "year";
+export type TimePeriod = "today" | "week" | "month" | "year";
 export type Todo = {
-    id: string;
-    changedAt: string; // formatted date with timezone included
+    id: number;
+    type: TodoType;
     title: string;
-    description?: string;
-    metricOfExecution?: string;
-}
-
-export type TodoStoreCache = Record<Exclude<TimePeriod, "day" | "year">, Record<TodoType, Record<string, Todo[]>[]>>;
+    description: string | null;
+    metricOfCompletion: string | null;
+    changedAt: Date;
+};
+export type DBCache = {
+    todayData: Record<TodoType, Todo[]>;
+    weekData: Record<TodoType, Todo[]>;
+    monthData: Record<TodoType, Todo[]>;
+    yearData: Record<TodoType, Todo[]>;
+};

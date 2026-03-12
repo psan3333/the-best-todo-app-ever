@@ -1,0 +1,1 @@
+CREATE INDEX `changedAt` ON `user_todo` (`changedAt`);
